@@ -10,7 +10,7 @@ from copy import copy
 ACTIONS_BEGIN = [5]
 ACTIONS_CELEBERATE = [0,0,0,5,5,1]
 
-class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips Planner
+class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips PlannerFUCK YOU!!!
     """
     An agent that uses a STRIPS planner to solve the Tower of Hanoi problem for 2 disks
     """
