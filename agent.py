@@ -29,7 +29,7 @@ class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips Planner
     def generate_action_list(self):
         import subprocess
         # solve for show (user can click through)
-        subproc = subprocess.Popen(['python', '-m', 'Hw2.mystrips', 'TowerofHanoi/towers2_strips.txt'], stdout=subprocess.PIPE)l
+        subproc = subprocess.Popen(['python', '-m', 'Hw2.mystrips', 'TowerofHanoi/towers2_strips.txt'], stdout=subprocess.PIPE)
 
         plan = ''
         while True:
