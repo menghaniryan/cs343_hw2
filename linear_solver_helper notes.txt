@@ -1,0 +1,84 @@
+linear_solver_helper notes
+
+-linear solver helper is given the:
+-world, state, goals, current_plan, and default argument depth = 0 ( if we want to override that, we can)
+- world is a class created in mystrips.py
+	- it has 4 fields (in init, there may be other fields declared somewhere else, but who actually know?)
+	- state, which is a dict. I think it maps predicates to literals. (this is because is_true returns "literals in self.state[predicate]")
+	- goals, which is a set
+	- known_literals, which is a set
+	- actions, which is a dict
+	- is_true returns if there is a set of literals that matches the literals passed in
+	- is_false returns the opposite of is_true
+	- set_true first creates the predicate and puts it in the state if it's not there, then adds the literals to the end of the predicate
+	- set_false, does the opposite of set_true, which means it removes literals from the gives predicate
+	- add_goal, given a predicate, literals, and a truth value (default to True) initializes a goal from GroundCondition, and adds it to the set of goals (need to look at GroundCondition?)
+	- add_literal, adds a literal to the set of known literals
+	- add action, checks if the action is not in the dictionary of actions, and then adds the action to the dict with the key being the action_name, and the value being the action
+	- goal_reached, returns true if all the goals in the goals set have been reached, false otherwise
+- state, i have no intiial idea of what this does
+	- it holds the grounded conditions? that's all I can think of (bc that's all it does)
+	- Grounded Conditions are ones that replace all variables with literals
+- goals, the list of goals from the world variable
+- current_plan, empty list. should show the plan to go from a goal to a subgoal (backwards)
+- depth = 0, how far we are allowed to traverse before we implement the cutoff
+
+
+now for the big boy...linear solver helper
+
+1st take through, im going to do a quick overview of what i think should happen
+
+-the padding is just a used for printing, don't worry about it
+-the plan is a empty list for which i think the entire plan will be stored? We will probably append plan to the current plan, and then pass current plan in in the recursive call (thats my guess)
+-debugging turns on (or off) the subgoal_action_list, which i don't understand
+
+-if we have no more goals to accomplish, give me back the plan to accomplish these goals
+-if we are stuck in an infinit loop, abort the process
+-im going to ignore a debug statement for now
+-now loop through all of the goals in the goals set
+-goal = goals[i] == current goal for right now (this is a note for me...not for the actual code)
+-so i think debug is actually turned on on first run through, because of this if statement that tells me the current plan, the subgoal, and the other goals, and the state
+-if this goals is already satisfied (satisfied(state, goal)), then we can just continue looping
+	-satisfied (state, goal) does a weak_find of the state in the goal
+	-weak_find goes through all of the items in a list of items, and matches them to a target
+	- if an item matches, it returns that item
+	- a weak_match checks if a condition is matched by seeing if a grounded condition has the same name and literals, but ignores the truth value of it (essential it just goes through all the values in ground1 and ground2 (lineraly) and checks if they are the same)
+- if it is NOT satisfied, we execute the following code:
+	- the possible actions is a sorted list
+	- the sorted list is actually the sorted list of possible ground states
+	- the key (which is the key used for comparison (think of compareTo)) is a lambda expression
+	- the lambda expression is the initial_state_distance(state, c.pre)
+	- what this tells me is that c is an action, and .pre are the preconditions for the action to take place (found in class Action: 127)
+	- the inital_state_distance takes in a state, and returns the number of preconditions that aren't satisfied based on the preconditions specified
+	- so that leads me to believe that the possible_actions_list sorts the list of possible grounded states by the ones that have the most preconditions satisfied first, and we go down the list of actions which have (assuming) lower numbers of preconditions met
+- then we create a variable found (intialized to False)
+- we loop through the possible actions
+- first we check if the preconditions are reachable from the world given the action
+	-preconditions_reachable does this: 
+		- it goes through ever precondition and checks if it's reachable 
+		- precondition_reachable
+			- if the precondition has been reached, return true
+			- else, go through all of the actions you can take from the world
+			- this one is a bit complicated ... might have to relook this
+			- for now, assume that the function just checks if the preconditions are reachable from the world
+	- this checks if there is at least one action for each precondition which satsifies it
+- then check if the action contradicts another goal
+- so then, if the action can't be rejected as unreachable, we have to descent
+- the temp_state is now set to the state, the subgols are the preconditions for this action that we're taking, the current plan now includes taking this action, and teh solution is made by recursively solving for this action
+- update the state to include the post conditions
+- so now we check if the state deleted any of the previous goals 
+- the option that we choose to check for this is by reintroducing any goals which were deleted
+- clobbered is the list of not satisfied goals ...? take a look at line 518
+- i dont know why we do lines 531 and 532
+- add the subplan to the solution
+- say that the temp state is valid
+- add the action to the plan
+- this is pretty much all that happens
+- so why would this fuck with 3 disks?
+- because we introduce a goal that we are already in
+- we can either change the heuristic or keep track of teh history of the states
+- changing the heuristic for the sort might be easy, so what should we do?
+- i think doing the best path is what makes it loop forever, essentially it's like a greedy algorithm where the best path keeps looping within itself
+- that's why we can borrow elements from djiksrta's and have a visited element
+- or we can just systematically go through all the nodes
+- must mull it over though,
