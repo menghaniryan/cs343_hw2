@@ -1,7 +1,7 @@
 from OpenNero import *
 from common import *
 
-import TowerofHanoi 
+import TowerofHanoi
 from TowerofHanoi.constants import *
 from TowerofHanoi.environment import TowerEnvironment
 from TowerofHanoi.constants import *
@@ -29,8 +29,8 @@ class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips Planner
     def generate_action_list(self):
         import subprocess
         # solve for show (user can click through)
-        subproc = subprocess.Popen(['python', '-m', 'Hw2.mystrips', 'TowerofHanoi/towers2_strips.txt'], stdout=subprocess.PIPE)
-        
+        subproc = subprocess.Popen(['python', '-m', 'Hw2.mystrips', 'TowerofHanoi/towers2_strips.txt'], stdout=subprocess.PIPE)l
+
         plan = ''
         while True:
             try:
@@ -49,9 +49,9 @@ class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips Planner
             if len(words) == 3:
                 (what, frm, to) = words
                 hl_actions.append((what, frm, to))
-        
+
         from TowerofHanoi.towers import Towers2 as towers
-        
+
         action_list = []
         action_list.extend(ACTIONS_BEGIN)
         state = copy(towers.INIT)
@@ -105,7 +105,7 @@ class MyPlanningAgent2Disk(AgentBrain):#2-Disk Strips Planner
         """
         return True
 
-class MyPlanningAgent3Disk(AgentBrain):#3-Disk Strips Planner 
+class MyPlanningAgent3Disk(AgentBrain):#3-Disk Strips Planner
     """
     An agent that uses a STRIPS planner to solve the Tower of Hanoi problem for 3 disks
     """
@@ -142,9 +142,9 @@ class MyPlanningAgent3Disk(AgentBrain):#3-Disk Strips Planner
             if len(words) == 3:
                 (what, frm, to) = words
                 hl_actions.append((what, frm, to))
-        
+
         from TowerofHanoi.towers import Towers3 as towers
-        
+
         action_list = []
         action_list.extend(ACTIONS_BEGIN)
         state = copy(towers.INIT)
@@ -197,4 +197,3 @@ class MyPlanningAgent3Disk(AgentBrain):#3-Disk Strips Planner
         called when the agent is done
         """
         return True
-
