@@ -460,6 +460,7 @@ def linear_solver_helper(world, state, goals, current_plan, depth = 0):
                 viewer.display_text(padding + str(action).replace("\n", "\n" + padding))
                 viewer.user_pause("")
 
+
             # check if there is at least 1 action for each precondition which satisfies it
             if not preconditions_reachable(world, action):
                 if debug:
@@ -594,14 +595,23 @@ def contains_contradiction(state, action):
 
 
 def initial_state_distance(state, preconds):
-    count = 0
-    for p in preconds:
-        if not satisfied(state, p):
-            count += 1
-    return count
+    # order the moves by the preconditions they meet
+    # so, the precodition that matters most is On
+    # then clear
+    # then smaller
+    # we want to avoid doing On, so we assign it the largest value. That way, the moves that have the most On Preconditions that we have to meet, we do them last
+    # Next, clearing has the next most steps. So we want to avoid that the next most
+    # Finally, we smaller is basically a pre-check. So we assign it the least weight, because doing smaller doesn't really require any actions
+	count = 0
+	predicate_values = { 'On':3, 'Clear':2, 'Smaller':1}
+	text = join_list(preconds)
+	for p in preconds:
+		if not satisfied(state, p):
+			count += predicate_values[p.predicate]
+	return count
 
 def satisfied(state, goal):
-    condition = weak_find(state, goal)
+    condition = strong_find(state, goal)
 
     # we only keep track of positive literals (closed world assumption), so if it's here, it's true
     if goal.truth == True:
