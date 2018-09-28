@@ -1,0 +1,24 @@
+Lab Report Notes f
+
+(1) How the STRIPS planner solves the 2-disk problem and why it ends up in an infinite loop in the 3-disk case.
+
+When going through the 3 disk problems, we figured out that the 2 disk solution repeats because one of the subgoals to solving the problem leads creates further subgoals, whose subgoals include the current subgoal. Although that was a bit confusing, it be easily described as a form of "circular reasoning". In the 3-disk case, we need to solve subgoal A to solve the problem. In order to solve subgoal A, we
+need to solve subgoal B. In order to solve subgoal B, we need to solve subgoal C. And finally, in order to solve subgoal C, we need subgoal A. This leads to an infinite in the form (where each arrow denotes
+the requirement of a succeeding subgoal): A --> B --> C --> A --> B --> C --> A, etc. How the 2-disk plannar works is that it starts in a state and it is given a goal. Then, the AI decides to work backward from the goal state.
+The AI generates a list of moves that could be made in the past that lead to a certain goal state. These moves are then taken, and further subgoals are created out of the preconditions that are not of the current subgoal. The AI 
+goes through all of these subgoals until it reaches the goal state. 
+
+(2) Why your modification of the STRIPS planner manages to solve the problem. 
+The AI used the function linear_solver_helper() to implement the linear solver. Inside the linear_solver_helper() method, the possible actions are generated. These possible actions are sorted using the heuristic 
+"initial_state_distance". We looked at the "initial_state_distance" solver and it initially worked by goes through each of the preconditions for the actions given, and tallying up the number of preconditions not met and using that
+to sort: the actions that have the most precondtions met will be at the front of the list, while the actions that have the least preconditions met will be at the back of the list.
+
+This is where we decided to make modificatiosns to the heuristic. The problem with the initial heuristic is that is treated every unmet precondition as the same. However, this is not true. Each precondition implies moves, and
+some preconditions imply more foreseeable moves than other preconditions. In our heuristic, we decided that we wanted to avoid actions that first did not have the "On" preconditions met; then avoid the actions that did not have
+the "clear" precondition met; finally, the actions that did not have the "smaller" preconditions met. This is because moves that did not have the "On" precondition met would have to take more moves in the future to complete 
+these moves. An action without the "On(a, b)" precondition met will require another the b location to be clear and the a condition to be smaller than b. In essence, the "On" precondition contains the other preconditions.
+The "clear(a)" precondition only requires that there is nothing on a. The smaller precondition is used as the base, since both the On precondition and the Clear precondition require the smaller precondition. Therefore, we
+ranked the preconditions in such that the On precondition was the worst, the clear precondition the second worst, and the smaller precondition the best. This way, the AI chose the correct implementation.
+
+(3) Whether there are examples of scenarios where your implementation fails. 
+Requires a bit of brainstorming.
