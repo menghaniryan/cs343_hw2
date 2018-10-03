@@ -111,4 +111,4 @@ In this way, our altered STRIPS planner solves the 3-disk problem.
 We tested our planner on greater numbers of disks, and it has found solutions to 4-disk, 5-disk, and 6-disk,
 scenarios with all of the disks starting on the leftmost pole. The planner also works on the 7-disk scenario and 
 shuffled scenarios (where the disks begin in various positions) if the MAX_ACTIVATION_COUNT variable in mystrips.py,
-which limits the number of recursive calls is increased.
+which limits the number of recursive calls is increased. As far as we can tell, this modification works for all cases.
