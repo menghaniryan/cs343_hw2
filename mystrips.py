@@ -1,3 +1,9 @@
+# Information
+# Members: Ryan Menghani(rvm447) and Johnny Hoang(jnh2475)
+# Project: HW2
+# Date: 10/02/18
+# Section: 51580
+
 import fileinput
 import re
 import sys

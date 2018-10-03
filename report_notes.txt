@@ -1,3 +1,10 @@
+## Information
+Members: Ryan Menghani(rvm447) and Johnny Hoang()
+Project: HW2
+Date: 10/02/18
+Section: 51580
+
+
 Lab Report Notes
 
 (1) How the STRIPS planner solves the 2-disk problem and why it ends up in an i
